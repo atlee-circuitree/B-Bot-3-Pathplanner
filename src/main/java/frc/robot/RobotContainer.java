@@ -307,9 +307,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("shoot far",new SequentialCommandGroup(
         // Step 1: Un-jam/back up the note for 0.25 seconds
         new ParallelCommandGroup(
-            shoot.run(() -> shoot.runAtPower(-0.2)),       // Run shooter in reverse
+            shoot.run(() -> shoot.runAtPower(-0.4)),       // Run shooter in reverse
             kickUp.run(() -> kickUp.reverse())     // Or a reverse command for kickUp/intake
-        ).withTimeout(1.0),
+        ).withTimeout(1.5),
         new WaitCommand(0.5),
         // Step 2: Normal shooting sequence
         new ParallelCommandGroup(
@@ -325,7 +325,9 @@ public class RobotContainer {
 
 
         NamedCommands.registerCommand("deploy", new ManualDeploy(intake, Constants.Intake.DeploySpeed).withTimeout(.5));
-        NamedCommands.registerCommand("intake", new RunOuttake(intake));
+        NamedCommands.registerCommand("intake shoot", new RunOuttake(intake).withTimeout(7));
+        NamedCommands.registerCommand("intake", new RunOuttake(intake).withTimeout(2));
+
     }
 
 }

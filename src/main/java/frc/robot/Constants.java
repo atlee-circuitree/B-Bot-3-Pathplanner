@@ -66,7 +66,7 @@ public final class Constants {
   public static class Shooter {
 
     public static final double ShootSpeed = 1.0;
-    public static final double ShootSpeedClose = 45.0;
+    public static final double ShootSpeedClose = 47.0;
     public static final double ShootSpeedFar = 55.0;
     public static final double ShootSpeedtest = 10.0;
     public static final double SHOOTER_THRESHOLD_RPS = 15.0;
