@@ -10,6 +10,7 @@ import frc.robot.commands.ManualDeplolyWithinReason;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.KickerUper;
 import frc.robot.commands.ManualDeploy;
+import frc.robot.commands.MidDeploy;
 import frc.robot.commands.RunIntake;
 import frc.robot.commands.RunOuttake;
 import frc.robot.commands.Shoot;
@@ -235,6 +236,8 @@ public class RobotContainer {
     // Moves the arm downward at 30% speed while POV Left is held, and stops when released
     Player1.povLeft().whileTrue(new ManualDeplolyWithinReason(intake, -Constants.Intake.DeploySpeed));
     Player1.povRight().whileTrue(new ManualDeplolyWithinReason(intake, Constants.Intake.DeploySpeed));
+    Player1.leftBumper().whileTrue(new MidDeploy(intake, -Constants.Intake.DeploySpeed));
+
 
     
     //(new ManualDeploy(intake, -0.3, "deploy")

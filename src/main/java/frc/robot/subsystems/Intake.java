@@ -82,13 +82,23 @@ public void stopWheels() {
   else if (currentAngle >= Constants.Intake.PRETTYDEPLOY_MAX && speed < 0) {
     stopDeploy();
   } 
-  else if (currentAngle >= Constants.Intake.PRETTYDEPLOY_MID && speed < 0) {
-    stopDeploy();
-  }
   else {
     // Safe to move
     IntakeArm.set(speed);
   }
+}
+
+public void midDeploy (double speed){
+  double currentAngle = getAngleEncoder();
+  // Safety Check: If we are at/past the maximum limit and trying to move higher (positive speed)
+   if (currentAngle >= Constants.Intake.PRETTYDEPLOY_MID && speed < 0) {
+    stopDeploy();
+  } 
+  else {
+    // Safe to move
+    IntakeArm.set(speed);
+  }
+  
 }
 
   public void stopDeploy() {
