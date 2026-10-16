@@ -288,8 +288,7 @@ public class RobotContainer {
 
     // Vision: hold to aim at the HUB, set shooter speed from distance, and feed once aimed.
     Player1.rightBumper().whileTrue(
-        AutoShoot.create(drivetrain, vision, shoot, kickUp,
-            this::driverVelocityX, this::driverVelocityY, this::driverRotationRate));
+        AutoShoot.create(vision, shoot, kickUp));
   }
  
   /**

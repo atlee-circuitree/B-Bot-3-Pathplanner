@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.LimelightHelpers;
 import edu.wpi.first.math.geometry.Translation2d;
 import static edu.wpi.first.units.Units.*;
 
@@ -125,7 +126,11 @@ public final class Constants {
    public static class LimelightConstants {
         /** NetworkTables name of the Limelight. Must match the name set in the Limelight web UI. */
         public static final String TURRET_LIMELIGHT_NAME = "limelight-left";   
-        public static final double AIM_MIN_RATE_RAD_PER_SEC = 0.4;             
+        public static final double AIM_MIN_RATE_RAD_PER_SEC = 0.4; 
+        public static final boolean CAMERA_FLIP_TX = true;
+        public static final boolean CAMERA_FLIP_TY = true;
+
+        
 
         // ---- Camera mounting (used by the ty distance formula in Vision.java) ----
         // ASSUMPTION: lens height is a PLACEHOLDER (measure it). Pitch is the team's rough
@@ -147,7 +152,7 @@ public final class Constants {
 
         // ---- Auto-aim (AimAtHub.java) ----
         /** Rotation command in rad/s per degree of horizontal error. Start low, raise until snappy. */
-        public static final double AIM_KP                  = 0.32;
+        public static final double AIM_KP                  = 0.08;
         /** Upper limit on the rotation command while aiming, in rad/s. */
         public static final double AIM_MAX_RATE_RAD_PER_SEC = 3.0;
         /** Within this many degrees of center the robot counts as "aimed" and feeding is allowed. */

@@ -84,6 +84,13 @@ public class Vision extends SubsystemBase {
     int id = (int) LimelightHelpers.getFiducialID(m_limelight);
     double tx = LimelightHelpers.getTXNC(m_limelight);
     double ty = LimelightHelpers.getTYNC(m_limelight);
+    if (LimelightConstants.CAMERA_FLIP_TX) {
+      tx = -tx;
+    }
+    if (LimelightConstants.CAMERA_FLIP_TY) {
+      ty = -ty;
+    }
+
 
     SmartDashboard.putBoolean("Vision LL tv", valid);
     SmartDashboard.putNumber("Vision LL tid", id);
