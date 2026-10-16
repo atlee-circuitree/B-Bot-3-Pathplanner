@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.MotorLimits;
 
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
@@ -37,6 +38,9 @@ public class Intake extends SubsystemBase {
 
     IntakeWheels   = new TalonFX(Constants.CAN_IDS.IntakeWheels, "B-bot");
     IntakeArm = new TalonFX(Constants.CAN_IDS.IntakeArm, "B-bot");
+    MotorLimits.apply(IntakeWheels, Constants.CurrentLimits.INTAKE_WHEELS_STATOR_AMPS, Constants.CurrentLimits.INTAKE_WHEELS_SUPPLY_AMPS);
+    MotorLimits.apply(IntakeArm, Constants.CurrentLimits.INTAKE_ARM_STATOR_AMPS, Constants.CurrentLimits.INTAKE_ARM_SUPPLY_AMPS);
+    
     PivotEncoder = new CANcoder(Constants.CAN_IDS.PivotEncoder, "B-bot");
 
     Slot0Configs slot0ConfigsUp = new Slot0Configs();

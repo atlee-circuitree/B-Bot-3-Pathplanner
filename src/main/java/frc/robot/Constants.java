@@ -70,6 +70,41 @@ public final class Constants {
     public static final double ShootSpeedFar = 55.0;
     public static final double ShootSpeedtest = 10.0;
     public static final double SHOOTER_THRESHOLD_RPS = 15.0;
+
+    
+    /**
+     * Distance-to-speed table used by ShootFromDistance. Each row is
+     * {distance in meters as reported by Vision "Distance (m)" on the dashboard, shooter speed in RPS}.
+     * Keep rows sorted by distance; speeds between rows are linearly interpolated, and
+     * distances outside the table use the nearest row.
+     *
+     * ASSUMPTION: these two rows are PLACEHOLDERS built from your existing Close/Far speeds.
+     * Replace the distances with where Close and Far were actually tuned, then add a row for
+     * every spot you test. Read the distance off the dashboard, not a tape measure.
+     */
+    public static final double[][] SHOT_TABLE = {
+      {1.5, ShootSpeedClose},
+      {2.5, 51.0},
+      {3.5, ShootSpeedFar},
+    };
+
+    /** Speed used by auto-shoot until the first distance reading arrives (RPS). */
+    public static final double AUTO_FALLBACK_RPS = ShootSpeedFar;
+  }
+
+  public static class CurrentLimits {
+    public static final double SHOOTER_STATOR_AMPS        = 80.0;
+    public static final double SHOOTER_SUPPLY_AMPS        = 40.0;
+    public static final double KICKER_STATOR_AMPS         = 50.0;
+    public static final double KICKER_SUPPLY_AMPS         = 40.0;
+    public static final double INTAKE_WHEELS_STATOR_AMPS  = 40.0;
+    public static final double INTAKE_WHEELS_SUPPLY_AMPS  = 30.0;
+    public static final double INTAKE_ARM_STATOR_AMPS     = 30.0;
+    public static final double INTAKE_ARM_SUPPLY_AMPS     = 20.0;
+    public static final double DRIVE_STATOR_AMPS = 40.0;
+    public static final double DRIVE_SUPPLY_AMPS = 40.0;
+    public static final double STEER_STATOR_AMPS = 40.0;
+    public static final double STEER_SUPPLY_AMPS = 30.0;
   }
 
   public static class Drive {
@@ -87,21 +122,45 @@ public final class Constants {
 
   }
 
-  public static class LimelightConstants {
-        /** NetworkTables name of the turret-facing Limelight. */
+   public static class LimelightConstants {
+        /** NetworkTables name of the Limelight. Must match the name set in the Limelight web UI. */
         public static final String TURRET_LIMELIGHT_NAME = "limelight-front";
 
-        // --- Distance model:  distance = DISTANCE_SCALE * ta ^ DISTANCE_EXPONENT --- redo
-        public static final double DISTANCE_SCALE      = 46.39986;
-        public static final double DISTANCE_EXPONENT   = -0.4918478;
-        /** ta values above this threshold are too close to use for ranging. */
-        public static final double MAX_TA_FOR_DISTANCE = 24.0; //redo
+        // ---- Camera mounting (used by the ty distance formula in Vision.java) ----
+        // ASSUMPTION: lens height is a PLACEHOLDER (measure it). Pitch is the team's rough
+        // estimate (about 15 degrees up) and will be calibrated before testing.
+        /** Height of the Limelight lens above the carpet, in meters. */
+        public static final double CAMERA_LENS_HEIGHT_METERS = 0.441;
+        /** Upward tilt of the camera above horizontal, in degrees (0 = level, + = tilted up). */
+        public static final double CAMERA_PITCH_DEGREES      = 33.5;
 
-        // --- Turret auto-aim thresholds (tx degrees off-center) ---
-        /** Switch from fast to slow rotation below this tx error. */
-        public static final double TX_THRESHOLD_LARGE  = 10.0;
-        /** Stop rotating (consider locked) below this tx error. */
-        public static final double TX_THRESHOLD_SMALL  = 4.5;
+        // ---- Target: 2026 REBUILT HUB AprilTags ----
+        /** Tag centers are 44.25 in (1.124 m) off the carpet, same for every HUB tag (2026 game manual). */
+        public static final double HUB_TAG_HEIGHT_METERS = 1.124;
+        // The manual lists these 16 IDs as the HUB tags but does not say which alliance owns which.
+        // ASSUMPTION: Red = 2-11, Blue = 18-27. VERIFY against the field layout (see the guide).
+        // Each HUB face has one centered tag and one offset tag. Once you know which IDs are the
+        // centered ones, trimming these lists to only those IDs makes aiming more accurate.
+        public static final int[] HUB_TAG_IDS_RED  = {2, 3, 4, 5, 8, 9, 10, 11};
+        public static final int[] HUB_TAG_IDS_BLUE = {18, 19, 20, 21, 24, 25, 26, 27};
+
+        // ---- Auto-aim (AimAtHub.java) ----
+        /** Rotation command in rad/s per degree of horizontal error. Start low, raise until snappy. */
+        public static final double AIM_KP                  = 0.06;
+        /** Upper limit on the rotation command while aiming, in rad/s. */
+        public static final double AIM_MAX_RATE_RAD_PER_SEC = 3.0;
+        /** Within this many degrees of center the robot counts as "aimed" and feeding is allowed. */
+        public static final double AIM_TOLERANCE_DEG       = 2.0;
+        /**
+         * Degrees between the camera's centerline and the direction the shooter actually points.
+         * 0 if the camera looks the same way the shooter fires. Positive = shooter points to the
+         * camera's right.
+         */
+        public static final double AIM_OFFSET_DEG          = 0.0;
+
+        // ---- Filtering ----
+        /** After the tag is lost, keep using the last distance for this long (seconds). */
+        public static final double TARGET_HOLD_SECONDS     = 0.3;
     }
 
 }
