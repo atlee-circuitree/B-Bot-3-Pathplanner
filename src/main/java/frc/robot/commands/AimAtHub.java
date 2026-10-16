@@ -19,15 +19,11 @@ import frc.robot.subsystems.Vision;
 
 /**
  * Rotates the robot to center the HUB AprilTag in the Limelight view while the driver keeps full
- * control of translation.
+ * control of translation. Bind with whileTrue. If no HUB tag is visible, rotation falls back to
+ * the driver's own rotation input.
  *
- * <p>Runs for as long as it is scheduled (bind it with {@code whileTrue}). If no HUB tag is
- * visible, rotation falls back to the driver's own rotation input so the driver can turn to find
- * the tag.
- *
- * <p>Sign convention: Limelight tx is positive when the target is to the right. Positive swerve
- * rotation is counterclockwise. A target on the right therefore needs a negative (clockwise) rate,
- * which is exactly what {@code pid.calculate(tx, 0)} returns.
+ * Sign convention: Limelight tx is positive when the target is to the right. Positive swerve
+ * rotation is counterclockwise, so a target on the right needs a negative (clockwise) rate.
  */
 public class AimAtHub extends Command {
 
@@ -39,24 +35,14 @@ public class AimAtHub extends Command {
 
   private final PIDController m_aimPid = new PIDController(LimelightConstants.AIM_KP, 0.0, 0.0);
 
-  /**
-   * Own request object on purpose: the shared teleop request has a rotational deadband of about
-   * 0.66 rad/s, which would swallow the small corrections needed to finish aiming. Translation
-   * keeps the same deadband as the teleop request.
-   */
   private final SwerveRequest.FieldCentric m_request =
       new SwerveRequest.FieldCentric()
           .withDeadband(
               (Constants.Drive.MAX_SPEED_MPS / Constants.Drive.SPEED_DIVISOR)
                   * Constants.Drive.DEADBAND_PERCENT)
           .withRotationalDeadband(0.0)
-          .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+          .withDriveRequestType(DriveRequestType.Velocity);
 
-  /**
-   * @param velocityX driver field-relative X velocity in m/s (same scaling as the default drive command)
-   * @param velocityY driver field-relative Y velocity in m/s
-   * @param manualRotationRate driver rotation rate in rad/s, used only while no tag is visible
-   */
   public AimAtHub(
       CommandSwerveDrivetrain drivetrain,
       Vision vision,
@@ -68,8 +54,6 @@ public class AimAtHub extends Command {
     m_velocityX = velocityX;
     m_velocityY = velocityY;
     m_manualRotationRate = manualRotationRate;
-    // Only the drivetrain is required: this interrupts the default drive command while held.
-    // Vision is read-only, so it is deliberately not a requirement.
     addRequirements(drivetrain);
   }
 
@@ -82,13 +66,19 @@ public class AimAtHub extends Command {
   public void execute() {
     double rotationRate;
     if (m_vision.hasTarget()) {
+      double txDeg = m_vision.getTxDegrees();
+      double output = m_aimPid.calculate(txDeg, 0.0);
+      // Small errors give tiny commands the wheels cannot act on, so add a minimum push
+      // until the error is inside half the aimed tolerance.
+      if (Math.abs(txDeg) > LimelightConstants.AIM_TOLERANCE_DEG / 2.0) {
+        output += Math.copySign(LimelightConstants.AIM_MIN_RATE_RAD_PER_SEC, output);
+      }
       rotationRate =
           MathUtil.clamp(
-              m_aimPid.calculate(m_vision.getTxDegrees(), 0.0),
+              output,
               -LimelightConstants.AIM_MAX_RATE_RAD_PER_SEC,
               LimelightConstants.AIM_MAX_RATE_RAD_PER_SEC);
     } else {
-      // Do not keep steering on old data: hand rotation back to the driver.
       m_aimPid.reset();
       rotationRate = m_manualRotationRate.getAsDouble();
     }
@@ -99,8 +89,6 @@ public class AimAtHub extends Command {
             .withVelocityY(m_velocityY.getAsDouble())
             .withRotationalRate(rotationRate));
   }
-
-  // No end() needed: when this command stops, the drivetrain's default (teleop) command resumes.
 
   @Override
   public boolean isFinished() {
