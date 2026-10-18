@@ -67,7 +67,7 @@ public final class Constants {
   public static class Shooter {
 
     public static final double ShootSpeed = 1.0;
-    public static final double ShootSpeedClose = 47.0;
+    public static final double ShootSpeedClose = 50.0;
     public static final double ShootSpeedFar = 55.0;
     public static final double ShootSpeedtest = 10.0;
     public static final double SHOOTER_THRESHOLD_RPS = 15.0;
@@ -86,7 +86,10 @@ public final class Constants {
     public static final double[][] SHOT_TABLE = {
       {1.5, ShootSpeedClose},
       {2.5, 51.0},
-      {3.5, ShootSpeedFar},
+      {3.0, ShootSpeedFar},
+      {3.5, 60},
+      {5.5, 65}
+
     };
 
     /** Speed used by auto-shoot until the first distance reading arrives (RPS). */
@@ -147,8 +150,8 @@ public final class Constants {
         // ASSUMPTION: Red = 2-11, Blue = 18-27. VERIFY against the field layout (see the guide).
         // Each HUB face has one centered tag and one offset tag. Once you know which IDs are the
         // centered ones, trimming these lists to only those IDs makes aiming more accurate.
-        public static final int[] HUB_TAG_IDS_RED  = {2, 3, 4, 5, 8, 9, 10, 11};
-        public static final int[] HUB_TAG_IDS_BLUE = {18, 19, 20, 21, 24, 25, 26, 27};
+        public static final int[] HUB_TAG_IDS_RED  = {3, 5, 10, 12};
+        public static final int[] HUB_TAG_IDS_BLUE = {20, 25, 24, 27};
 
         // ---- Auto-aim (AimAtHub.java) ----
         /** Rotation command in rad/s per degree of horizontal error. Start low, raise until snappy. */
@@ -162,7 +165,7 @@ public final class Constants {
          * 0 if the camera looks the same way the shooter fires. Positive = shooter points to the
          * camera's right.
          */
-        public static final double AIM_OFFSET_DEG          = 0.0;
+        public static final double AIM_OFFSET_DEG          = -12.0;
 
         // ---- Filtering ----
         /** After the tag is lost, keep using the last distance for this long (seconds). */
