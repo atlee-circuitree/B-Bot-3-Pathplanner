@@ -358,7 +358,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("deploy", new ManualDeploy(intake, Constants.Intake.DeploySpeed).withTimeout(.5));
         NamedCommands.registerCommand("intake shoot", new RunOuttake(intake).withTimeout(7));
-        NamedCommands.registerCommand("intake", new RunOuttake(intake).withTimeout(2));
+        NamedCommands.registerCommand("intake", new RunOuttake(intake).withTimeout(3));
 
     }
 
