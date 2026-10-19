@@ -755,7 +755,6 @@ public class LimelightHelpers {
      * @return Array of RawFiducial objects containing detection details
      */
     public static RawFiducial[] getRawFiducials(String limelightName) {
-        LimelightHelpers.setCameraPose_RobotSpace(limelightName, 0, 0, 0, 0, 0, 0);
         var entry = LimelightHelpers.getLimelightNTTableEntry(limelightName, "rawfiducials");
         var rawFiducialArray = entry.getDoubleArray(new double[0]);
         int valsPerEntry = 7;
@@ -1644,17 +1643,5 @@ public class LimelightHelpers {
         }
 
         return results;
-    }
-  
-    public static LimelightHelpers.PoseEstimate localize(CommandSwerveDrivetrain drivetrain)
-    {
-        int[] validIDs = {1};
-        LimelightHelpers.SetFiducialIDFiltersOverride("limelight-front", validIDs);
-
-        LimelightHelpers.SetRobotOrientation("limelight-front", drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-front");
-        return mt2;
-        
     }
 }

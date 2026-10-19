@@ -1,4 +1,6 @@
 package frc.robot.subsystems;
+import frc.robot.Constants;
+import frc.robot.MotorLimits;
 
 import static edu.wpi.first.units.Units.*;
 
@@ -153,6 +155,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 startSimThread();
             }
             this.field2d = field2d;
+        applyCurrentLimits();
         configureAutoBuilder();
     }
 
@@ -264,6 +267,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_sysIdRoutineToApply.dynamic(direction);
     }
 
+        /** Applies the standard current limits (Constants.CurrentLimits) to every drive and steer motor. */
+    private void applyCurrentLimits() {
+        for (var module : getModules()) {
+            MotorLimits.apply(module.getDriveMotor(),
+                Constants.CurrentLimits.DRIVE_STATOR_AMPS, Constants.CurrentLimits.DRIVE_SUPPLY_AMPS);
+            MotorLimits.apply(module.getSteerMotor(),
+                Constants.CurrentLimits.STEER_STATOR_AMPS, Constants.CurrentLimits.STEER_SUPPLY_AMPS);
+        }
+    }
+
     @Override
     public void periodic() {
         /*
@@ -284,17 +297,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-        // Feed MegaTag2 pose estimate from limelight-left.
+        // Feed MegaTag2 pose estimate from limelight-front.
         // MT2 needs the RAW gyro yaw, not the fused pose heading — using fused heading
         // creates a feedback loop since the fused pose already includes vision corrections.
         double heading = getPigeon2().getYaw().getValueAsDouble();
-        double yawRateDegsPerSec = getPigeon2().getAngularVelocityZWorld().getValueAsDouble();
         LimelightHelpers.SetRobotOrientation("limelight-front", heading, 0, 0, 0, 0, 0);
         LimelightHelpers.SetIMUMode("limelight-front", 3);
         
 
         if (DriverStation.isDisabled()) {
-            LimelightHelpers.PoseEstimate e = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-front");
             ArrayList<LimelightHelpers.PoseEstimate> poses = new ArrayList<>();
             poses.add(LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-front"));
             
@@ -440,7 +451,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if (mtp != null) {
                 Pose2d p = mtp.pose;
                 if (Math.abs(p.getX()) > 0.01 || (Math.abs(p.getY())) > 0.01) {
-                    System.out.println("   rotation " + p.getRotation().getDegrees());
                     r += p.getRotation().getDegrees();
                    
                     cr++;
@@ -453,7 +463,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         else
             throw new Exception();
 
-        System.out.println("final rotation " + r);
         return r;
     }
 

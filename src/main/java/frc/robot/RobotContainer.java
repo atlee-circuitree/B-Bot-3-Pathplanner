@@ -23,6 +23,10 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.KickUp;
 
+import frc.robot.commands.AimAtHub;
+import frc.robot.commands.AutoShoot;
+import frc.robot.subsystems.Vision;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -56,6 +60,7 @@ public class RobotContainer {
   private Intake intake;
   private Shooter shoot;
   private KickUp kickUp;
+  private Vision vision;
 
   private static final Field2d field = new Field2d();
   private final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain(field);
@@ -96,6 +101,8 @@ public class RobotContainer {
     intake = new Intake();
     shoot = new Shooter();
     kickUp = new KickUp();
+    vision = new Vision();
+
     configureBindings();
      mapEventsToCommands();
     
@@ -137,6 +144,23 @@ public class RobotContainer {
         double max = Math.abs(player1) > Math.abs(player2) ? player1 : player2;
         return max;
         }
+
+        // Driver commands in SI units, scaled and signed exactly like the default drive command in
+    // configureBindings(). AimAtHub / AutoShoot use these so the driver keeps translation control.
+    private double driverVelocityX()
+    {
+        return -getLeftY() * (Constants.Drive.MAX_SPEED_MPS / Constants.Drive.SPEED_DIVISOR);
+    }
+
+    private double driverVelocityY()
+    {
+        return -getLeftX() * (Constants.Drive.MAX_SPEED_MPS / Constants.Drive.SPEED_DIVISOR);
+    }
+
+    private double driverRotationRate()
+    {
+        return -getRightX() * MaxAngularRate;
+    }
     
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -185,7 +209,7 @@ public class RobotContainer {
     new KickerUper(kickUp, shoot)
     //new RunOuttake(intake) 
     ));
-    */
+    
     Player1.rightTrigger().whileTrue(
     new SequentialCommandGroup(
         // Step 1: Un-jam/back up the note for 0.25 seconds
@@ -205,7 +229,9 @@ public class RobotContainer {
         shoot.stopShooter();
         kickUp.stop();
     })
+    
 );
+*/
   Player1.x().whileTrue(
  new SequentialCommandGroup(
         // Step 1: Un-jam/back up the note for 0.25 seconds
@@ -234,7 +260,7 @@ public class RobotContainer {
     ));
 
     // Moves the arm downward at 30% speed while POV Left is held, and stops when released
-    Player1.povLeft().whileTrue(new ManualDeplolyWithinReason(intake, -Constants.Intake.DeploySpeed));
+    Player1.povLeft().whileTrue(new ManualDeplolyWithinReason(intake, -Constants.Intake.AutoDeploySpeed));
     Player1.povRight().whileTrue(new ManualDeplolyWithinReason(intake, Constants.Intake.DeploySpeed));
     Player1.leftBumper().whileTrue(new MidDeploy(intake, -Constants.Intake.DeploySpeed));
 
@@ -257,9 +283,14 @@ public class RobotContainer {
     //Player1.povUp().whileTrue(new Shoot(shoot, 0.65));
   
     Player1.y().whileTrue(new KickerUper(kickUp, shoot));
-  
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+
+        // Vision: hold to rotate toward the HUB tag while still driving (aim only, no shooting).
+    Player1.back().whileTrue(
+        new AimAtHub(drivetrain, vision, this::driverVelocityX, this::driverVelocityY, this::driverRotationRate));
+
+    // Vision: hold to aim at the HUB, set shooter speed from distance, and feed once aimed.
+    Player1.rightTrigger().whileTrue(
+        AutoShoot.create(vision, shoot, kickUp));
   }
  
   /**
@@ -329,7 +360,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("deploy", new ManualDeploy(intake, Constants.Intake.DeploySpeed).withTimeout(.5));
         NamedCommands.registerCommand("intake shoot", new RunOuttake(intake).withTimeout(7));
-        NamedCommands.registerCommand("intake", new RunOuttake(intake).withTimeout(2));
+        NamedCommands.registerCommand("intake", new RunOuttake(intake).withTimeout(3));
 
     }
 

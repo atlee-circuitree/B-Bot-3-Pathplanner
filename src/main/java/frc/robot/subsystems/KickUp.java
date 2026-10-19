@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.MotorLimits;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -20,6 +21,8 @@ public class KickUp extends SubsystemBase {
   public KickUp() {
     KickUpMotor = new TalonFX(Constants.CAN_IDS.KickUpMotor, "B-bot");
     Indexer = new TalonFX(Constants.CAN_IDS.Indexer, "B-bot");
+    MotorLimits.apply(KickUpMotor, Constants.CurrentLimits.KICKER_STATOR_AMPS, Constants.CurrentLimits.KICKER_SUPPLY_AMPS);
+    MotorLimits.apply(Indexer, Constants.CurrentLimits.KICKER_STATOR_AMPS, Constants.CurrentLimits.KICKER_SUPPLY_AMPS);
   }
 
   public void shoot(){
