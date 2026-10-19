@@ -209,7 +209,7 @@ public class RobotContainer {
     new KickerUper(kickUp, shoot)
     //new RunOuttake(intake) 
     ));
-    */
+    
     Player1.rightTrigger().whileTrue(
     new SequentialCommandGroup(
         // Step 1: Un-jam/back up the note for 0.25 seconds
@@ -229,7 +229,9 @@ public class RobotContainer {
         shoot.stopShooter();
         kickUp.stop();
     })
+    
 );
+*/
   Player1.x().whileTrue(
  new SequentialCommandGroup(
         // Step 1: Un-jam/back up the note for 0.25 seconds
@@ -258,7 +260,7 @@ public class RobotContainer {
     ));
 
     // Moves the arm downward at 30% speed while POV Left is held, and stops when released
-    Player1.povLeft().whileTrue(new ManualDeplolyWithinReason(intake, -Constants.Intake.DeploySpeed));
+    Player1.povLeft().whileTrue(new ManualDeplolyWithinReason(intake, -Constants.Intake.AutoDeploySpeed));
     Player1.povRight().whileTrue(new ManualDeplolyWithinReason(intake, Constants.Intake.DeploySpeed));
     Player1.leftBumper().whileTrue(new MidDeploy(intake, -Constants.Intake.DeploySpeed));
 
@@ -287,7 +289,7 @@ public class RobotContainer {
         new AimAtHub(drivetrain, vision, this::driverVelocityX, this::driverVelocityY, this::driverRotationRate));
 
     // Vision: hold to aim at the HUB, set shooter speed from distance, and feed once aimed.
-    Player1.rightBumper().whileTrue(
+    Player1.rightTrigger().whileTrue(
         AutoShoot.create(vision, shoot, kickUp));
   }
  

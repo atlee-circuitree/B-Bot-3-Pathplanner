@@ -48,10 +48,12 @@ public final class Constants {
     public static final double DEPLOY_SLOT0_KP = 5.0;
     public static final double DEPLOY_SLOT1_KP = 1.5;
     public static final double DeploySpeed = 0.1;
+    public static final double AutoDeploySpeed = 0.5;
+
     public static final double DEPLOY_MIN = 0;
     public static final double DEPLOY_MAX = 0.1;
     public static final double PRETTYDEPLOY_MAX = 98.0;
-    public static final double PRETTYDEPLOY_MID = 98.0;
+    public static final double PRETTYDEPLOY_MID = 48.0;
     public static final double BALL_POSITION = 4;
 
   }
