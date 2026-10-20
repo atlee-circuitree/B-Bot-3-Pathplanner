@@ -22,6 +22,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.KickUp;
+import frc.robot.subsystems.Xlock;
 
 import frc.robot.commands.AimAtHub;
 import frc.robot.commands.AutoShoot;
