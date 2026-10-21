@@ -16,13 +16,13 @@ import frc.robot.commands.RunOuttake;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.ShootInterrupt;
 import frc.robot.commands.StopIntake;
+import frc.robot.commands.XLock;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.KickUp;
-import frc.robot.subsystems.Xlock;
 
 import frc.robot.commands.AimAtHub;
 import frc.robot.commands.AutoShoot;
@@ -41,6 +41,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -79,6 +80,8 @@ public class RobotContainer {
 
   private final CommandXboxController Player1 = new CommandXboxController(0);
   private final CommandXboxController Player2 = new CommandXboxController(1);
+
+  private final XLock xLock = new XLock(drivetrain);
 
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
  // private final ShootSubsystem Shooter = new ShooterSubsystem();
@@ -274,6 +277,9 @@ public class RobotContainer {
     
     Player1.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+    // Press left stick button to lock the wheels in an X; press again to unlock.
+    Player1.leftStick().toggleOnTrue(xLock);
+
     //Player1.pov Up().whileTrue(new Shoot(shoot, -.1));
     Player1.a().whileTrue(new ManualDeploy(intake, Constants.Intake.DeploySpeed));
     Player1.b().whileTrue(new ManualDeploy(intake, -Constants.Intake.DeploySpeed));
@@ -286,8 +292,12 @@ public class RobotContainer {
     Player1.y().whileTrue(new KickerUper(kickUp, shoot));
 
         // Vision: hold to rotate toward the HUB tag while still driving (aim only, no shooting).
+    // Holding this also cancels the wheel lock first (the lock rejects every other drivetrain command).
     Player1.back().whileTrue(
-        new AimAtHub(drivetrain, vision, this::driverVelocityX, this::driverVelocityY, this::driverRotationRate));
+        new InstantCommand(xLock::cancel)
+            .andThen(new AimAtHub(
+                drivetrain, vision, this::driverVelocityX, this::driverVelocityY, this::driverRotationRate)
+                .asProxy()));
 
     // Vision: hold to aim at the HUB, set shooter speed from distance, and feed once aimed.
     Player1.rightTrigger().whileTrue(
