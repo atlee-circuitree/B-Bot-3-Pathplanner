@@ -19,7 +19,7 @@ public class MidDeploy extends Command {
     this.intake = intake;
     this.speed = speed;
     this.brake = (speed < 0);
-    addRequirements(intake);
+    addRequirements(intake.arm);
   }
   
 

@@ -45,6 +45,11 @@ public class Vision extends SubsystemBase {
   private double m_distanceMeters = Double.NaN;
   private double m_lastDistanceTimestamp = Double.NEGATIVE_INFINITY;
 
+    public Vision() {
+    // Limelight only reports centered HUB tags, so an offset tag beside one can never
+    // become the primary target and make the robot drop its aim.
+    LimelightHelpers.SetFiducialIDFiltersOverride(m_limelight, ALL_HUB_TAG_IDS);
+  }
   @Override
   public void periodic() {
     updateFromLimelight();

@@ -14,7 +14,7 @@ public class RunIntake extends Command {
   /** Creates a new RunIntake. */
   public RunIntake(Intake in) {
     intake = in;
-    addRequirements(in);
+    addRequirements(in.wheels);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

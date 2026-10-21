@@ -14,7 +14,7 @@ public class RunOuttake extends Command {
   /** Creates a new RunOuttake. */
   public RunOuttake(Intake out) {
     intake = out;
-    addRequirements(out);
+    addRequirements(out.wheels);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

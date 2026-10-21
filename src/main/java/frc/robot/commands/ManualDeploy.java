@@ -18,7 +18,7 @@ public class ManualDeploy extends Command {
     this.intake = intake;
     this.speed = speed;
     this.brake = (speed < 0);
-    addRequirements(intake);
+    addRequirements(intake.arm);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 

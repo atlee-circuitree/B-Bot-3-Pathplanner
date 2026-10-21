@@ -23,7 +23,7 @@ public class ManualDeplolyWithinReason extends Command {
     this.intake = intake;
     this.speed = speed;
     this.brake = (speed < 0);
-    addRequirements(intake);
+    addRequirements(intake.arm);
   }
 
   // Called when the command is initially scheduled.

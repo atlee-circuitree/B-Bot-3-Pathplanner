@@ -19,7 +19,7 @@ public class IntakeCommand extends Command {
     this.intake = intake;
     this.val = val;
     this.action = action;
-    addRequirements(intake);
+    addRequirements(action.equals("deploy") ? intake.arm : intake.wheels);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -48,7 +48,7 @@ public class IntakeCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (action == "deploy") {
+    if (action.equals("deploy")) {
       intake.stopDeploy();
     } else {
       intake.stopWheels();

@@ -14,7 +14,7 @@ public class StopIntake extends Command {
   public StopIntake(Intake StopIntake) {
     // Use addRequirements() here to declare subsystem dependencies.
     intake = StopIntake;
-    addRequirements(intake);
+    	addRequirements(intake.wheels);
   }
 
   // Called when the command is initially scheduled.

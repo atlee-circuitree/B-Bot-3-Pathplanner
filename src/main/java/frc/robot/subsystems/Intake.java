@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.Subsystem;
 import frc.robot.Constants;
 import frc.robot.MotorLimits;
 
@@ -23,6 +24,9 @@ public class Intake extends SubsystemBase {
 
   private final TalonFX IntakeWheels;
   private final TalonFX IntakeArm;
+    /** Separate locks so a wheel command and an arm command can run at the same time. */
+  public final Subsystem wheels = new SubsystemBase("IntakeWheels") {};
+  public final Subsystem arm = new SubsystemBase("IntakeArm") {};
   //private final CANcoder PivotEncoder;
 
   /** Creates a new Intake. */
@@ -74,36 +78,38 @@ public void stopWheels() {
    public void deployManual(double speed) {
     IntakeArm.set(speed);
   }
-  
+    /** Which way a speed moves the "Pivot Encoder get" angle: +1 up, -1 down, 0 not moving. */
+  private double angleDirection(double speed) {
+    return Math.signum(speed) * Constants.Intake.ARM_SPEED_TO_ANGLE_SIGN;
+  }
+
   public void deployManualWithinReason(double speed) {
-  double currentAngle = getAngleEncoder();
+    double angle = getAngleEncoder();
+    double dir = angleDirection(speed);
 
-  // Safety Check: If we are at/past the minimum limit and trying to move lower (negative speed)
-  if (currentAngle <= Constants.Intake.DEPLOY_MIN && speed > 0) {
-    stopDeploy();
-  }
-  // Safety Check: If we are at/past the maximum limit and trying to move higher (positive speed)
-  else if (currentAngle >= Constants.Intake.PRETTYDEPLOY_MAX && speed < 0) {
-    stopDeploy();
-  } 
-  else {
-    // Safe to move
-    IntakeArm.set(speed);
-  }
-}
+    // Only block the direction that goes FURTHER past a limit; moving back is always allowed.
+    boolean pastMin = angle <= Constants.Intake.DEPLOY_MIN && dir < 0;
+    boolean pastMax = angle >= Constants.Intake.PRETTYDEPLOY_MAX && dir > 0;
 
-public void midDeploy (double speed){
-  double currentAngle = getAngleEncoder();
-  // Safety Check: If we are at/past the maximum limit and trying to move higher (positive speed)
-   if (currentAngle >= Constants.Intake.PRETTYDEPLOY_MID && speed < 0) {
-    stopDeploy();
-  } 
-  else {
-    // Safe to move
-    IntakeArm.set(speed);
+    SmartDashboard.putBoolean("Intake Arm Blocked", pastMin || pastMax);
+    if (pastMin || pastMax) {
+      stopDeploy();
+    } else {
+      IntakeArm.set(speed);
+    }
   }
-  
-}
+
+  public void midDeploy(double speed) {
+    double angle = getAngleEncoder();
+    boolean pastMid = angle >= Constants.Intake.PRETTYDEPLOY_MID && angleDirection(speed) > 0;
+
+    SmartDashboard.putBoolean("Intake Arm Blocked", pastMid);
+    if (pastMid) {
+      stopDeploy();
+    } else {
+      IntakeArm.set(speed);
+    }
+  }
 
   public void stopDeploy() {
     IntakeArm.set(0);

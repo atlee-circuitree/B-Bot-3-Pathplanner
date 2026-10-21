@@ -55,6 +55,9 @@ public final class Constants {
     public static final double PRETTYDEPLOY_MAX = 98.0;
     public static final double PRETTYDEPLOY_MID = 48.0;
     public static final double BALL_POSITION = 4;
+        /** +1 if a POSITIVE arm speed makes "Pivot Encoder get" go UP, -1 if it makes it go DOWN.
+     *  -1 = what the old code assumed. Check on the robot (see test step A). */
+    public static final double ARM_SPEED_TO_ANGLE_SIGN = -1.0;
 
   }
 
@@ -161,8 +164,10 @@ public final class Constants {
         // ASSUMPTION: Red = 2-11, Blue = 18-27. VERIFY against the field layout (see the guide).
         // Each HUB face has one centered tag and one offset tag. Once you know which IDs are the
         // centered ones, trimming these lists to only those IDs makes aiming more accurate.
-        public static final int[] HUB_TAG_IDS_RED  = {10};
-        public static final int[] HUB_TAG_IDS_BLUE = {20, 25, 24, 27};
+         // Centered HUB tags only. Red: 10 front, 2/5 sides. Blue: 26 front, 21/18 sides.
+        // (4 and 20 are the back faces toward the neutral zone; add them only if you shoot from there.)
+        public static final int[] HUB_TAG_IDS_RED  = {10, 2, 5};
+        public static final int[] HUB_TAG_IDS_BLUE = {26, 21, 18};
 
         // ---- Auto-aim (AimAtHub.java) ----
         /** Rotation command in rad/s per degree of horizontal error. Start low, raise until snappy. */

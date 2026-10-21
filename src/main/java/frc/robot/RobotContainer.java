@@ -278,6 +278,14 @@ public class RobotContainer {
     Player1.b().whileTrue(new ManualDeploy(intake, -Constants.Intake.DeploySpeed));
     Player1.povDown().whileTrue(new RunIntake(intake));//outtake
     Player1.leftTrigger().whileTrue(new RunOuttake(intake));//intake
+        // ---- Player 2: same intake arm + wheel controls as Player 1 ----
+    Player2.povLeft().whileTrue(new ManualDeplolyWithinReason(intake, -Constants.Intake.AutoDeploySpeed));
+    Player2.povRight().whileTrue(new ManualDeplolyWithinReason(intake, Constants.Intake.DeploySpeed));
+    Player2.leftBumper().whileTrue(new MidDeploy(intake, -Constants.Intake.DeploySpeed));
+    Player2.a().whileTrue(new ManualDeploy(intake, Constants.Intake.DeploySpeed));
+    Player2.b().whileTrue(new ManualDeploy(intake, -Constants.Intake.DeploySpeed));
+    Player2.povDown().whileTrue(new RunIntake(intake));
+    Player2.leftTrigger().whileTrue(new RunOuttake(intake));
     //Player1.povDown().whileTrue(new IntakeCommand(intake, 50, "deploy"));
 
     //Player1.povUp().whileTrue(new Shoot(shoot, 0.65));
