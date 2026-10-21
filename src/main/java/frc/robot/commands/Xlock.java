@@ -33,6 +33,10 @@ public class WheelLock extends Command {
   public void execute() {
     m_drivetrain.setControl(m_request);
   }
-
+  // Other drivetrain commands can't interrupt the lock; they are rejected instead.
+  @Override
+  public InterruptionBehavior getInterruptionBehavior() {
+    return InterruptionBehavior.kCancelIncoming;
+  }
   // No end() needed: the default drive command takes over when this command is interrupted.
 }
