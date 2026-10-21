@@ -103,8 +103,8 @@ public final class Constants {
     public static final double SHOOTER_SUPPLY_AMPS        = 40.0;
     public static final double KICKER_STATOR_AMPS         = 50.0;
     public static final double KICKER_SUPPLY_AMPS         = 40.0;
-    public static final double INTAKE_WHEELS_STATOR_AMPS  = 40.0;
-    public static final double INTAKE_WHEELS_SUPPLY_AMPS  = 30.0;
+    public static final double INTAKE_WHEELS_STATOR_AMPS  = 50.0;
+    public static final double INTAKE_WHEELS_SUPPLY_AMPS  = 40.0;
     public static final double INTAKE_ARM_STATOR_AMPS     = 30.0;
     public static final double INTAKE_ARM_SUPPLY_AMPS     = 20.0;
     public static final double DRIVE_STATOR_AMPS = 40.0;
