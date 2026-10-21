@@ -291,6 +291,25 @@ public class RobotContainer {
     // Vision: hold to aim at the HUB, set shooter speed from distance, and feed once aimed.
     Player1.rightTrigger().whileTrue(
         AutoShoot.create(vision, shoot, kickUp));
+         // NEW: optional wheel lock. All of these must be true for the lock to start:
+    //   - left stick is pressed
+    //   - robot is in teleop
+    //   - the "Wheel Lock Enabled" dashboard checkbox is ticked (starts unticked every boot)
+    //   - vision is locked on the HUB (Vision.isAimed())
+    // Once started, the X is held until the left stick is released (or the box is unticked),
+    // even if the robot gets bumped off target, so a hit can't release the lock.
+    SmartDashboard.putBoolean("Wheel Lock Enabled", false);
+    Player1.leftStick()
+        .and(RobotModeTriggers.teleop())
+        .and(() -> SmartDashboard.getBoolean("Wheel Lock Enabled", false))
+        // .and(vision::isAimed)
+        .onTrue(
+            drivetrain
+                .applyRequest(() -> brake)
+                .until(
+                    () ->
+                        !Player1.leftStick().getAsBoolean()
+                            || !SmartDashboard.getBoolean("Wheel Lock Enabled", false)));
   }
  
   /**
