@@ -52,8 +52,8 @@ public final class Constants {
 
     public static final double DEPLOY_MIN = 0;
     public static final double DEPLOY_MAX = 0.1;
-    public static final double PRETTYDEPLOY_MAX = 98.0;
-    public static final double PRETTYDEPLOY_MID = 48.0;
+    public static final double PRETTYDEPLOY_MAX = 80.0;
+    public static final double PRETTYDEPLOY_MID = 55.0;
     public static final double BALL_POSITION = 4;
 
   }
@@ -103,10 +103,10 @@ public final class Constants {
     public static final double SHOOTER_SUPPLY_AMPS        = 40.0;
     public static final double KICKER_STATOR_AMPS         = 50.0;
     public static final double KICKER_SUPPLY_AMPS         = 40.0;
-    public static final double INTAKE_WHEELS_STATOR_AMPS  = 50.0;
-    public static final double INTAKE_WHEELS_SUPPLY_AMPS  = 40.0;
-    public static final double INTAKE_ARM_STATOR_AMPS     = 30.0;
-    public static final double INTAKE_ARM_SUPPLY_AMPS     = 20.0;
+    public static final double INTAKE_WHEELS_STATOR_AMPS  = 55.0;
+    public static final double INTAKE_WHEELS_SUPPLY_AMPS  = 45.0;
+    public static final double INTAKE_ARM_STATOR_AMPS     = 40.0;
+    public static final double INTAKE_ARM_SUPPLY_AMPS     = 30.0;
     public static final double DRIVE_STATOR_AMPS = 40.0;
     public static final double DRIVE_SUPPLY_AMPS = 40.0;
     public static final double STEER_STATOR_AMPS = 40.0;

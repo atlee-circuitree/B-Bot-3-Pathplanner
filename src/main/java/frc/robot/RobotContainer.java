@@ -329,9 +329,9 @@ public class RobotContainer {
         new WaitCommand(0.5),
         // Step 2: Normal shooting sequence
         new ParallelCommandGroup(
-            new Shoot(shoot, Constants.Shooter.ShootSpeedClose),
+            new Shoot(shoot, Constants.Shooter.ShootSpeedAuto),
             new KickerUper(kickUp, shoot)
-        )
+        ).withTimeout(5.5)
     ).finallyDo(() -> {
         // ULTIMATE SAFETY CATCH:
         // When the bumper is released, forcefully shut off all motors
@@ -358,10 +358,10 @@ public class RobotContainer {
     }));
 
 
-        NamedCommands.registerCommand("deploy", new ManualDeploy(intake, Constants.Intake.DeploySpeed).withTimeout(.5));
-        NamedCommands.registerCommand("intake shoot", new RunOuttake(intake).withTimeout(7));
+        NamedCommands.registerCommand("deploy", new ManualDeploy(intake, Constants.Intake.DeploySpeed).withTimeout(.7));
+        NamedCommands.registerCommand("intake shoot", new RunOuttake(intake).withTimeout(5.5));
         NamedCommands.registerCommand("intake", new RunOuttake(intake).withTimeout(3));
-
+        NamedCommands.registerCommand("autoshoot", (AutoShoot.create(vision, shoot, kickUp)));
     }
 
 }
