@@ -12,9 +12,9 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /**
  * Locks the swerve wheels in an X pattern (all modules pointed toward the robot's center) so the
- * robot resists being pushed. Bind with whileTrue: the lock holds while the button is held, and the
- * default drive command resumes when it is released. Can also be used in autos, e.g.
- * {@code new WheelLock(drivetrain).withTimeout(2.0)}.
+ * robot resists being pushed. Bound with toggleOnTrue: one press locks, the next press unlocks, and the
+ * default drive command resumes once it is unlocked. Can also be used in autos, e.g.
+ * {@code new XLock(drivetrain).withTimeout(2.0)}.
  */
 public class XLock extends Command {
 
@@ -24,7 +24,7 @@ public class XLock extends Command {
   private final SwerveRequest.SwerveDriveBrake m_request =
       new SwerveRequest.SwerveDriveBrake().withDriveRequestType(DriveRequestType.Velocity);
 
-  public WheelLock(CommandSwerveDrivetrain drivetrain) {
+  public XLock(CommandSwerveDrivetrain drivetrain) {
     m_drivetrain = drivetrain;
     addRequirements(drivetrain);
   }
