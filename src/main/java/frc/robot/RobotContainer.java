@@ -186,53 +186,7 @@ public class RobotContainer {
    
     SmartDashboard.putNumber("shoot speed", 0);
 
-  // shoot close
-   // Player1.x().whileTrue(new ParallelCommandGroup(
-    //  new Shoot(shoot, Constants.Shooter.ShootSpeedClose),
-      // new KickerUper(kickUp, shoot)
-     // new KickerUper(kickUp, shoot)
-
-      //new RunOuttake(intake) 
-   // )); 
-
-  // shoot far
-  //Player1.rightTrigger().whileTrue(new ParallelCommandGroup(
-     // new Shoot(shoot, Constants.Shooter.ShootSpeedFar),
-     // new KickerUper(kickUp, shoot)
-     // new RunOuttake(intake) 
-    //));
-  
-  //commenting out the following for testing.
-  /* 
-  Player1.leftBumper().whileTrue(new ParallelCommandGroup(
-    new Shoot(shoot, Constants.Shooter.ShootSpeedClose ), 
-    new KickerUper(kickUp, shoot)
-    //new RunOuttake(intake) 
-    ));
-    
-    Player1.rightTrigger().whileTrue(
-    new SequentialCommandGroup(
-        // Step 1: Un-jam/back up the note for 0.25 seconds
-        new ParallelCommandGroup(
-            shoot.run(() -> shoot.runAtPower(-0.1)),       // Run shooter in reverse
-            kickUp.run(() -> kickUp.reverse())     // Or a reverse command for kickUp/intake
-        ).withTimeout(0.25),
-        new WaitCommand(0.5),
-        // Step 2: Normal shooting sequence
-        new ParallelCommandGroup(
-            new Shoot(shoot, Constants.Shooter.ShootSpeedFar),
-            new KickerUper(kickUp, shoot)
-        )
-    ).finallyDo(() -> {
-        // ULTIMATE SAFETY CATCH:
-        // When the bumper is released, forcefully shut off all motors
-        shoot.stopShooter();
-        kickUp.stop();
-    })
-    
-);
-*/
-  Player1.x().whileTrue(
+  Player1.leftBumper().whileTrue(
  new SequentialCommandGroup(
         // Step 1: Un-jam/back up the note for 0.25 seconds
         new ParallelCommandGroup(
@@ -260,22 +214,16 @@ public class RobotContainer {
     ));
 
     // Moves the arm downward at 30% speed while POV Left is held, and stops when released
-    Player1.povLeft().whileTrue(new ManualDeplolyWithinReason(intake, -Constants.Intake.AutoDeploySpeed));
-    Player1.povRight().whileTrue(new ManualDeplolyWithinReason(intake, Constants.Intake.DeploySpeed));
-    Player1.leftBumper().whileTrue(new MidDeploy(intake, -Constants.Intake.DeploySpeed));
+    Player1.x().whileTrue(new ManualDeplolyWithinReason(intake, -Constants.Intake.AutoDeploySpeed));
+    Player1.b().whileTrue(new ManualDeplolyWithinReason(intake, Constants.Intake.DeploySpeed));
+    //Player1.leftBumper().whileTrue(new MidDeploy(intake, -Constants.Intake.DeploySpeed));
 
 
-    
-    //(new ManualDeploy(intake, -0.3, "deploy")
-    
-    
-    
-    
     Player1.start().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
     //Player1.pov Up().whileTrue(new Shoot(shoot, -.1));
     Player1.a().whileTrue(new ManualDeploy(intake, Constants.Intake.DeploySpeed));
-    Player1.b().whileTrue(new ManualDeploy(intake, -Constants.Intake.DeploySpeed));
+    //Player1.b().whileTrue(new ManualDeploy(intake, -Constants.Intake.DeploySpeed));
     Player1.povDown().whileTrue(new RunIntake(intake));//outtake
     Player1.leftTrigger().whileTrue(new RunOuttake(intake));//intake
     //Player1.povDown().whileTrue(new IntakeCommand(intake, 50, "deploy"));
@@ -285,7 +233,7 @@ public class RobotContainer {
     Player1.y().whileTrue(new KickerUper(kickUp, shoot));
 
         // Vision: hold to rotate toward the HUB tag while still driving (aim only, no shooting).
-    Player1.back().whileTrue(
+    Player1.rightBumper().whileTrue(
         new AimAtHub(drivetrain, vision, this::driverVelocityX, this::driverVelocityY, this::driverRotationRate));
 
     // Vision: hold to aim at the HUB, set shooter speed from distance, and feed once aimed.
