@@ -16,7 +16,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
  * default drive command resumes when it is released. Can also be used in autos, e.g.
  * {@code new WheelLock(drivetrain).withTimeout(2.0)}.
  */
-public class WheelLock extends Command {
+public class XLock extends Command {
 
   private final CommandSwerveDrivetrain m_drivetrain;
 
