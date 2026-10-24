@@ -27,7 +27,7 @@ public class Intake extends SubsystemBase {
 
   /** Creates a new Intake. */
 
- private final VoltageOut m_voltageOut = new VoltageOut(0);
+ private final VoltageOut m_voltageOut = new VoltageOut(.5);
 
  private final CANcoder PivotEncoder;
 

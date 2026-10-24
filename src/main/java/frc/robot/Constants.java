@@ -86,11 +86,15 @@ public final class Constants {
      * every spot you test. Read the distance off the dashboard, not a tape measure.
      */
     public static final double[][] SHOT_TABLE = {
-      {1.5, ShootSpeedClose},
-      {2.5, 51.0},
-      {3.0, ShootSpeedFar},
+      {1.5, 49},
+      {2.0, 50.5},
+      {2.5, 53.0},
+      {3.0, 55.5},
       {3.5, 60},
-      {5.5, 63}
+      {4.0, 61},
+      {4.5, 62},
+      {5.0, 64.5},
+      {5.5, 67.5}
 
     };
 
