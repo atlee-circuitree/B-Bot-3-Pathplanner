@@ -31,6 +31,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
+import frc.robot.subsystems.YALLtest;
 
 //import java.lang.invoke.ClassSpecializer.SpeciesData;
 
@@ -87,7 +88,7 @@ public class RobotContainer {
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   private final SendableChooser<Command> autochooser;
-
+ private final YALLtest limelightSubsystem = new YALLtest();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -312,4 +313,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("autoshoot", (AutoShoot.create(vision, shoot, kickUp)));
     }
 
+public void updateLimelightSimulation() {
+    limelightSubsystem.updateSimulation(
+        drivetrain.getPose()
+    );
+}
 }
